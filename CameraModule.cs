@@ -57,7 +57,7 @@ namespace CameraMicTelegram
             }
             catch (Exception)
             {
-                ErrorMessage = "Cannot save picture, might be no BgrImage?"; 
+                ErrorMessage = "Cannot save picture, might be no BgrImage?";
             }
             return this;
         }
@@ -88,35 +88,36 @@ namespace CameraMicTelegram
             capture.Set(CapProp.FrameWidth, 1280);
             capture.Set(CapProp.FrameHeight, 720);
             CascadeClassifier haar = new CascadeClassifier(Environment.CurrentDirectory + "/assets/haarcascade_frontalface_default.xml");
-            using (Camera.Image = capture.QueryFrame())
-            {
-                if (Camera.Image != null)
+            while ("1" == "1")
+                using (Camera.Image = capture.QueryFrame())
                 {
-                    Camera.BgrImage = Camera.Image.ToImage<Bgr, byte>();
-                    Image<Gray, byte> grayframe = Camera.Image.ToImage<Gray, byte>();
-                    var faces = haar.DetectMultiScale(
-                                    grayframe,
-                                    1.4,
-                                    4,
-                                    new Size(grayframe.Width / 8, grayframe.Height / 8),
-                                    Size.Empty);
-                    foreach (var face in faces)
+                    if (Camera.Image != null)
                     {
-                        Camera.BgrImage.Draw(face, new Bgr(0, double.MaxValue, 100), 3);
+                        Camera.BgrImage = Camera.Image.ToImage<Bgr, byte>();
+                        Image<Gray, byte> grayframe = Camera.Image.ToImage<Gray, byte>();
+                        var faces = haar.DetectMultiScale(
+                                        grayframe,
+                                        1.4,
+                                        4,
+                                        new Size(grayframe.Width / 8, grayframe.Height / 8),
+                                        Size.Empty);
+                        foreach (var face in faces)
+                        {
+                            Camera.BgrImage.Draw(face, new Bgr(0, double.MaxValue, 100), 3);
+                        }
+                        if (faces.Length != 0)
+                        {
+                            return Camera;
+                        }
                     }
-                    if (faces.Length != 0)
+                    else
                     {
+                        Camera.ErrorMessage = "Camera image is not available.";
                         return Camera;
                     }
                 }
-                else
-                {
-                    Camera.ErrorMessage = "Camera image is not available.";
-                    return Camera;
-                }
-            }
-            Camera.ErrorMessage = "Cannot reach frames. Could be camera used by other software? or software problems.";
-            return Camera;
+            //Camera.ErrorMessage = "Cannot reach frames. Could be camera used by other software? or software problems.";
+            //return Camera;
         }
 
         public static async Task<Boolean> TakeSavePic(string fileName = "pict")
@@ -129,9 +130,9 @@ namespace CameraMicTelegram
             return await Task.Run(() => TakePic().CheckFace().SavePic(fileName).FileName != null);
         }
 
-        public static async Task<Boolean> WatchAndSee(string fileName= "catch") 
+        public static async Task<Boolean> WatchAndSee(string fileName = "catch")
         {
-            return await Task.Run(() => WatchFaces().SavePic(fileName).FileName != null  );
+            return await Task.Run(() => WatchFaces().SavePic(fileName).FileName != null);
         }
     }
 }

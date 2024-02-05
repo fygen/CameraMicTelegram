@@ -47,20 +47,21 @@ namespace TelegramController
                 // Only process text messages
                 if (message.Text is not { } messageText)
                     return;
-
+                //FromChatId = "asd";
                 FromChatId = message.Chat.Id;
                 long chatId = message.Chat.Id;
+                ToChatId = message.Chat.Id;
 
                 Console.WriteLine($"Received a '{messageText}' message in chat {FromChatId}.");
                 
-                await TeloSendMessage("Seni bulacam olum" + FromChatId.Username + "seni bulacam.");
+                await TeloSendMessage("Seni bulacam olum" + FromChatId + "seni bulacam.", FromChatId);
                 // Echo received message text
 
 
                 switch (messageText)
                 {
                     case "Get":
-                        await SendPic(ToChatId).SendPic(MyId);
+                        await SendPic(ToChatId);
                         break;
                     case "Face":
                         await FaceSendPic(ToChatId);
@@ -69,7 +70,7 @@ namespace TelegramController
                         await WatchAndGet(ToChatId);
                         break;
                     case "send":
-                        await TeloSendMessage().TeloSendPic();
+                        await TeloSendMessage();
                         break;
                     default: break;
                 }
@@ -91,7 +92,7 @@ namespace TelegramController
         }
         public async Task<TelegramModule> SendPic(ChatId chatId)
         {
-            picName = DateTime.Now.ToString("yyyy:MM:dd_HH:mm:ss");
+            picName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             await CameraModule.TakeSavePic(picName);
             await using Stream stream = System.IO.File.OpenRead(Environment.CurrentDirectory + "/assets/" + picName + ".jpg");
 
@@ -102,12 +103,12 @@ namespace TelegramController
                 parseMode: ParseMode.Html,
                 cancellationToken: default(CancellationToken));
 
-            return await this;
+            return this;
         }
 
         public async Task<TelegramModule> FaceSendPic(ChatId chatId = default)
         {
-            string picName = DateTime.Now.ToString("/FACE:yyyy:MM:dd_HH:mm:ss");
+            string picName = DateTime.Now.ToString("FACE_yyyy-MM-dd_HH-mm-ss");
             await CameraModule.FaceAndSave(picName);
 
             await using Stream stream = System.IO.File.OpenRead(Environment.CurrentDirectory + "/assets/" + picName + ".jpg");
@@ -118,12 +119,12 @@ namespace TelegramController
                 caption: "Taken from comfuture",
                 parseMode: ParseMode.Html,
                 cancellationToken: default(CancellationToken));
-            return await this;
+            return this;
         }
 
         public async Task<TelegramModule> WatchAndGet(ChatId chatId = default)
         {
-            string picName = DateTime.Now.ToString("/FACE:yyyy:MM:dd_HH:mm:ss");
+            string picName = DateTime.Now.ToString("FACE_yyyy-MM-dd_HH-mm-ss");
             await CameraModule.WatchAndSee(picName);
 
             return this;
@@ -143,11 +144,11 @@ namespace TelegramController
             return this;
         }
 
-        public async Task<TelegramModule> TeloSendMessage(string message = default)
+        public async Task<TelegramModule> TeloSendMessage(string message = default, ChatId ToChatId = default)
         {
             Message sentMessage = await botClient.SendTextMessageAsync(
                 chatId: ToChatId,
-                text: "Söyle ona sebastiyan:\n" + MyMessage.Text,
+                text: "Söyle ona sebastiyan:\n" + message,
                 cancellationToken: default(CancellationToken));
             return this;
         }

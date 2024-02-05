@@ -8,11 +8,11 @@ namespace CameraMicTelegram
         {
             #region Modules_StartUP
             TelegramModule Bot = new TelegramModule();
-            async void TeloOperations()
-            {
-                TelegramModule bot = new TelegramModule();
-                await bot.FaceSendPic().Se;
-            }
+            //async void TeloOperations()
+            //{
+            //    TelegramModule bot = new TelegramModule();
+            //    await bot.FaceSendPic().Se;
+            //}
             #endregion Modules_StartUP
         }
     }
