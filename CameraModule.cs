@@ -64,7 +64,7 @@ namespace CameraMicTelegram
 
         public CameraModule CheckFace()
         {
-            CascadeClassifier haar = new CascadeClassifier(Environment.CurrentDirectory + "/assets/haarcascade_frontalface_default.xml");
+            CascadeClassifier haar = new CascadeClassifier(Environment.CurrentDirectory + "/models/haarcascade_frontalface_default.xml");
             Image<Gray, byte> grayframe = Image.ToImage<Gray, byte>();
             var faces = haar.DetectMultiScale(
                             grayframe,
@@ -87,7 +87,7 @@ namespace CameraMicTelegram
             VideoCapture capture = new VideoCapture(0);
             capture.Set(CapProp.FrameWidth, 1280);
             capture.Set(CapProp.FrameHeight, 720);
-            CascadeClassifier haar = new CascadeClassifier(Environment.CurrentDirectory + "/assets/haarcascade_frontalface_default.xml");
+            CascadeClassifier haar = new CascadeClassifier(Environment.CurrentDirectory + "/models/haarcascade_frontalface_default.xml");
             while ("1" == "1")
                 using (Camera.Image = capture.QueryFrame())
                 {

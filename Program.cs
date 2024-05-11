@@ -1,4 +1,5 @@
 using TelegramController;
+using NAudio.Wave;
 
 namespace CameraMicTelegram
 {
@@ -7,7 +8,10 @@ namespace CameraMicTelegram
         static async Task Main(string[] args)
         {
             #region Modules_StartUP
-            TelegramModule Bot = new TelegramModule();
+            MicModule mic = new MicModule();
+            //TelegramModule Bot = new TelegramModule();
+            
+
             //async void TeloOperations()
             //{
             //    TelegramModule bot = new TelegramModule();
